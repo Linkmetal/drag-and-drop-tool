@@ -1,0 +1,92 @@
+export const productsFixture = [
+  {
+    id: "63342dacc3764d72ac356d74",
+    name: "Ball Livingston",
+    price: 33.93,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dac204a7b6b2e64a1d1",
+    name: "Bethany Rush",
+    price: 31.34,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dac671db7974686b9f1",
+    name: "Murray Hurley",
+    price: 18.27,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dac6f23396fbe4ab785",
+    name: "Dorothy Santana",
+    price: 14.7,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dacc5eb3974af24ac04",
+    name: "Knox Whitley",
+    price: 38.93,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dacaa88796fbdfef586",
+    name: "Shawna Giles",
+    price: 38.17,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dac173c7ac8ddb30208",
+    name: "Landry Oneill",
+    price: 32.71,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dac24a5b985db424c57",
+    name: "Keri Best",
+    price: 20.19,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dacd3bad4c40e68ddb2",
+    name: "Latisha Hinton",
+    price: 24.16,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dac3ba373b05c17fdc3",
+    name: "Forbes Brewer",
+    price: 32.94,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dac31029391d11d8750",
+    name: "Claudine Joseph",
+    price: 38.66,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dac8282a07cfe0e7770",
+    name: "Elizabeth Blackburn",
+    price: 31.72,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dac7bb30bcd7a13144a",
+    name: "Lilly Padilla",
+    price: 22.75,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dac2f90f26bd717e561",
+    name: "Garner Spears",
+    price: 32.79,
+    imageUrl: "http://placehold.it/32x32",
+  },
+  {
+    id: "63342dacaf08519444112249",
+    name: "Cohen Crosby",
+    price: 34.28,
+    imageUrl: "http://placehold.it/32x32",
+  },
+];
