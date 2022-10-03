@@ -21,7 +21,6 @@ import { useCallback, useRef, useState } from "react";
 
 import { Droppable } from "components/Droppable";
 import { Grid } from "types/Grid";
-import { Product } from "types/Product";
 import { ProductCard } from "components/ProductCard";
 import { productsFixture } from "fixtures/Products";
 import styles from "./DraggableGrid.module.css";
@@ -61,7 +60,6 @@ export const DraggableGrid = ({
     )
   );
 
-  console.log("🚀 ~ file: DraggableGrid.tsx ~ line 43 ~ items", items);
   const [clonedItems, setClonedItems] = useState<{
     [key: UniqueIdentifier]: UniqueIdentifier[];
   } | null>(null);
@@ -179,28 +177,7 @@ export const DraggableGrid = ({
             return;
           }
 
-          // if (overId === PLACEHOLDER_ID) {
-          //   const newContainerId = getNextContainerId();
-
-          //   unstable_batchedUpdates(() => {
-          //     setContainers((containers) => [...containers, newContainerId]);
-          //     setItems((items) => ({
-          //       ...items,
-          //       [activeContainer]: items[activeContainer].filter(
-          //         (id) => id !== activeId
-          //       ),
-          //       [newContainerId]: [active.id],
-          //     }));
-          //     setActiveId(null);
-          //   });
-          //   return;
-          // }
-
           const overContainer = findContainer(overId);
-          console.log(
-            "🚀 ~ file: DraggableGrid.tsx ~ line 202 ~ overContainer",
-            overContainer
-          );
 
           if (overContainer) {
             const activeIndex = items[activeContainer].indexOf(active.id);
@@ -277,6 +254,14 @@ export const DraggableGrid = ({
             });
           }
         }}
+        onDragCancel={() => {
+          if (clonedItems) {
+            setItems(clonedItems);
+          }
+
+          setActiveId(null);
+          setClonedItems(null);
+        }}
       >
         <>
           <SortableContext
@@ -292,7 +277,7 @@ export const DraggableGrid = ({
                   id={containerId.toString()}
                 >
                   <ul className={styles.row}>
-                    {items[containerId].map((productId, index) => (
+                    {items[containerId].map((productId) => (
                       <ProductCard
                         key={productId}
                         product={
