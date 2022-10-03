@@ -42,11 +42,10 @@ export const DraggableGrid = ({
           "63342dacc3764d72ac356d74",
           "63342dac204a7b6b2e64a1d1",
           "63342dac671db7974686b9f1",
-          "63342dac6f23396fbe4ab785",
         ],
         templateId: "",
       },
-      { id: "r2", productIds: [], templateId: "" },
+      { id: "r2", productIds: ["63342dac6f23396fbe4ab785"], templateId: "" },
       { id: "r3", productIds: [], templateId: "" },
     ],
   },
@@ -202,7 +201,17 @@ export const DraggableGrid = ({
     }
   };
 
+  const onDragCancel = () => {
+    if (clonedItems) {
+      setItems(clonedItems);
+    }
+
+    setActiveId(null);
+    setClonedItems(null);
+  };
+
   const onDragEnd = ({ active, over }: DragEndEvent) => {
+    // Drag row
     if (active.id in items && over?.id) {
       setContainers((containers) => {
         const activeIndex = containers.indexOf(active.id);
@@ -228,8 +237,13 @@ export const DraggableGrid = ({
 
     const overContainer = findContainer(overId);
 
+    // Drag item to another row
     if (overContainer) {
+      // Cancel the drag if there is more than 3 items in a row
+      if (items[overContainer].length >= 4) return onDragCancel();
+
       const activeIndex = items[activeContainer].indexOf(active.id);
+
       const overIndex = items[overContainer].indexOf(overId);
 
       if (activeIndex !== overIndex) {
@@ -258,14 +272,7 @@ export const DraggableGrid = ({
           setActiveId(active.id);
           setClonedItems(items);
         }}
-        onDragCancel={() => {
-          if (clonedItems) {
-            setItems(clonedItems);
-          }
-
-          setActiveId(null);
-          setClonedItems(null);
-        }}
+        onDragCancel={onDragCancel}
       >
         <SortableContext
           items={containers}
