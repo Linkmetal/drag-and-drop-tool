@@ -1,6 +1,8 @@
 import {
   CollisionDetection,
   DndContext,
+  DragEndEvent,
+  DragOverEvent,
   KeyboardSensor,
   PointerSensor,
   UniqueIdentifier,
@@ -19,6 +21,7 @@ import {
 } from "@dnd-kit/sortable";
 import { useCallback, useRef, useState } from "react";
 
+import { Draggable } from "components/Draggable";
 import { Droppable } from "components/Droppable";
 import { Grid } from "types/Grid";
 import { ProductCard } from "components/ProductCard";
@@ -76,16 +79,6 @@ export const DraggableGrid = ({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const findContainer = (id: UniqueIdentifier) => {
-    if (id in items) {
-      return id;
-    }
-
-    return Object.keys(items).find((key: string) =>
-      items[key].includes(id as string)
-    );
-  };
-
   const collisionDetectionStrategy: CollisionDetection = useCallback(
     (args) => {
       if (activeId && activeId in items) {
@@ -141,115 +134,129 @@ export const DraggableGrid = ({
     [activeId, items]
   );
 
+  const findContainer = (id: UniqueIdentifier) => {
+    if (id in items) {
+      return id;
+    }
+
+    return Object.keys(items).find((key: string) =>
+      items[key].includes(id as string)
+    );
+  };
+
+  const onDragOver = ({ active, over }: DragOverEvent) => {
+    const overId = over?.id;
+
+    if (overId == null || active.id in items) {
+      return;
+    }
+
+    const overContainer = findContainer(overId);
+    const activeContainer = findContainer(active.id);
+
+    if (!overContainer || !activeContainer) {
+      return;
+    }
+
+    if (activeContainer !== overContainer) {
+      setItems((items) => {
+        const activeItems = items[activeContainer];
+        const overItems = items[overContainer];
+        const overIndex = overItems.indexOf(overId);
+        const activeIndex = activeItems.indexOf(active.id);
+
+        let newIndex: number;
+
+        if (overId in items) {
+          newIndex = overItems.length + 1;
+        } else {
+          const isBelowOverItem =
+            over &&
+            active.rect.current.translated &&
+            active.rect.current.translated.top >
+              over.rect.top + over.rect.height;
+
+          const modifier = isBelowOverItem ? 1 : 0;
+
+          newIndex =
+            overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+        }
+
+        recentlyMovedToNewContainer.current = true;
+
+        return {
+          ...items,
+          [activeContainer]: items[activeContainer].filter(
+            (item) => item !== active.id
+          ),
+          [overContainer]: [
+            ...items[overContainer].slice(0, newIndex),
+            items[activeContainer][activeIndex],
+            ...items[overContainer].slice(
+              newIndex,
+              items[overContainer].length
+            ),
+          ],
+        };
+      });
+    }
+  };
+
+  const onDragEnd = ({ active, over }: DragEndEvent) => {
+    if (active.id in items && over?.id) {
+      setContainers((containers) => {
+        const activeIndex = containers.indexOf(active.id);
+        const overIndex = containers.indexOf(over.id);
+
+        return arrayMove(containers, activeIndex, overIndex);
+      });
+    }
+
+    const activeContainer = findContainer(active.id);
+
+    if (!activeContainer) {
+      setActiveId(null);
+      return;
+    }
+
+    const overId = over?.id;
+
+    if (overId == null) {
+      setActiveId(null);
+      return;
+    }
+
+    const overContainer = findContainer(overId);
+
+    if (overContainer) {
+      const activeIndex = items[activeContainer].indexOf(active.id);
+      const overIndex = items[overContainer].indexOf(overId);
+
+      if (activeIndex !== overIndex) {
+        setItems((items) => ({
+          ...items,
+          [overContainer]: arrayMove(
+            items[overContainer],
+            activeIndex,
+            overIndex
+          ),
+        }));
+      }
+    }
+
+    setActiveId(null);
+  };
+
   return (
     <div>
       <DndContext
         sensors={sensors}
         collisionDetection={collisionDetectionStrategy}
+        onDragOver={onDragOver}
+        onDragEnd={onDragEnd}
         onDragStart={({ active }) => {
           setActiveId(active.id);
           setClonedItems(items);
-        }}
-        onDragEnd={({ active, over }) => {
-          if (active.id in items && over?.id) {
-            setContainers((containers) => {
-              const activeIndex = containers.indexOf(active.id);
-              const overIndex = containers.indexOf(over.id);
-
-              return arrayMove(containers, activeIndex, overIndex);
-            });
-          }
-
-          const activeContainer = findContainer(active.id);
-
-          if (!activeContainer) {
-            setActiveId(null);
-            return;
-          }
-
-          const overId = over?.id;
-
-          if (overId == null) {
-            setActiveId(null);
-            return;
-          }
-
-          const overContainer = findContainer(overId);
-
-          if (overContainer) {
-            const activeIndex = items[activeContainer].indexOf(active.id);
-            const overIndex = items[overContainer].indexOf(overId);
-
-            if (activeIndex !== overIndex) {
-              setItems((items) => ({
-                ...items,
-                [overContainer]: arrayMove(
-                  items[overContainer],
-                  activeIndex,
-                  overIndex
-                ),
-              }));
-            }
-          }
-
-          setActiveId(null);
-        }}
-        onDragOver={({ active, over }) => {
-          const overId = over?.id;
-
-          if (overId == null || active.id in items) {
-            return;
-          }
-
-          const overContainer = findContainer(overId);
-          const activeContainer = findContainer(active.id);
-
-          if (!overContainer || !activeContainer) {
-            return;
-          }
-
-          if (activeContainer !== overContainer) {
-            setItems((items) => {
-              const activeItems = items[activeContainer];
-              const overItems = items[overContainer];
-              const overIndex = overItems.indexOf(overId);
-              const activeIndex = activeItems.indexOf(active.id);
-
-              let newIndex: number;
-
-              if (overId in items) {
-                newIndex = overItems.length + 1;
-              } else {
-                const isBelowOverItem =
-                  over &&
-                  active.rect.current.translated &&
-                  active.rect.current.translated.top >
-                    over.rect.top + over.rect.height;
-
-                const modifier = isBelowOverItem ? 1 : 0;
-
-                newIndex =
-                  overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
-              }
-
-              recentlyMovedToNewContainer.current = true;
-
-              return {
-                ...items,
-                [activeContainer]: items[activeContainer].filter(
-                  (item) => item !== active.id
-                ),
-                [overContainer]: [
-                  ...items[overContainer].slice(0, newIndex),
-                  items[activeContainer][activeIndex],
-                  ...items[overContainer].slice(
-                    newIndex,
-                    items[overContainer].length
-                  ),
-                ],
-              };
-            });
-          }
         }}
         onDragCancel={() => {
           if (clonedItems) {
@@ -260,36 +267,38 @@ export const DraggableGrid = ({
           setClonedItems(null);
         }}
       >
-        <>
-          <SortableContext
-            items={containers}
-            strategy={horizontalListSortingStrategy}
-            id={grid.id}
-          >
+        <SortableContext
+          items={containers}
+          strategy={horizontalListSortingStrategy}
+          id={grid.id}
+        >
+          <ul className={styles.grid}>
             {containers.map((containerId) => (
-              <Droppable droppableId={containerId.toString()} key={containerId}>
-                <SortableContext
-                  items={items[containerId]}
-                  strategy={horizontalListSortingStrategy}
-                  id={containerId.toString()}
-                >
-                  <ul className={styles.row}>
-                    {items[containerId].map((productId) => (
-                      <ProductCard
-                        key={productId}
-                        product={
-                          productsFixture.find(
-                            (product) => product.id === productId
-                          ) ?? productsFixture[0]
-                        }
-                      />
-                    ))}
-                  </ul>
-                </SortableContext>
-              </Droppable>
+              <Draggable draggableId={containerId.toString()} key={containerId}>
+                <Droppable droppableId={containerId.toString()}>
+                  <SortableContext
+                    items={items[containerId]}
+                    strategy={horizontalListSortingStrategy}
+                    id={containerId.toString()}
+                  >
+                    <ul className={styles.row}>
+                      {items[containerId].map((productId) => (
+                        <ProductCard
+                          key={productId}
+                          product={
+                            productsFixture.find(
+                              (product) => product.id === productId
+                            ) ?? productsFixture[0]
+                          }
+                        />
+                      ))}
+                    </ul>
+                  </SortableContext>
+                </Droppable>
+              </Draggable>
             ))}
-          </SortableContext>
-        </>
+          </ul>
+        </SortableContext>
       </DndContext>
     </div>
   );

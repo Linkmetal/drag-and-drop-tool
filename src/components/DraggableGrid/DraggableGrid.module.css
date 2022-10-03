@@ -9,3 +9,7 @@
   flex-flow: row wrap;
   list-style: none;
 }
+
+.grid {
+  list-style: none;
+}
