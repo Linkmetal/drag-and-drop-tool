@@ -4,5 +4,9 @@ export const numberToEuros = (number: number): string => {
     splittedNumber.push("00");
   }
 
+  if (splittedNumber[1].length === 1) {
+    splittedNumber[1] = splittedNumber[1].concat("0");
+  }
+
   return splittedNumber.join(",").concat(" EUR");
 };

@@ -105,15 +105,12 @@ export const DraggableGrid = ({
             pointerIntersections
           : rectIntersection(args);
       let overId = getFirstCollision(intersections, "id");
-      console.log("🚀 ~ file: DraggableGrid.tsx ~ line 70 ~ overId", overId);
 
       if (overId != null) {
         if (overId in items) {
           const containerItems = items[overId];
 
-          // If a container is matched and it contains items (columns 'A', 'B', 'C')
           if (containerItems.length > 0) {
-            // Return the closest droppable within that container
             overId = closestCenter({
               ...args,
               droppableContainers: args.droppableContainers.filter(
