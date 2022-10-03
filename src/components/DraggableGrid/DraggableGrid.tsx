@@ -220,6 +220,63 @@ export const DraggableGrid = ({
 
           setActiveId(null);
         }}
+        onDragOver={({ active, over }) => {
+          const overId = over?.id;
+
+          if (overId == null || active.id in items) {
+            return;
+          }
+
+          const overContainer = findContainer(overId);
+          const activeContainer = findContainer(active.id);
+
+          if (!overContainer || !activeContainer) {
+            return;
+          }
+
+          if (activeContainer !== overContainer) {
+            setItems((items) => {
+              const activeItems = items[activeContainer];
+              const overItems = items[overContainer];
+              const overIndex = overItems.indexOf(overId);
+              const activeIndex = activeItems.indexOf(active.id);
+
+              let newIndex: number;
+
+              if (overId in items) {
+                newIndex = overItems.length + 1;
+              } else {
+                const isBelowOverItem =
+                  over &&
+                  active.rect.current.translated &&
+                  active.rect.current.translated.top >
+                    over.rect.top + over.rect.height;
+
+                const modifier = isBelowOverItem ? 1 : 0;
+
+                newIndex =
+                  overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+              }
+
+              recentlyMovedToNewContainer.current = true;
+
+              return {
+                ...items,
+                [activeContainer]: items[activeContainer].filter(
+                  (item) => item !== active.id
+                ),
+                [overContainer]: [
+                  ...items[overContainer].slice(0, newIndex),
+                  items[activeContainer][activeIndex],
+                  ...items[overContainer].slice(
+                    newIndex,
+                    items[overContainer].length
+                  ),
+                ],
+              };
+            });
+          }
+        }}
       >
         <>
           <SortableContext
@@ -241,7 +298,7 @@ export const DraggableGrid = ({
                         product={
                           productsFixture.find(
                             (product) => product.id === productId
-                          ) ?? ({} as Product)
+                          ) ?? productsFixture[0]
                         }
                       />
                     ))}
