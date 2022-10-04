@@ -261,6 +261,27 @@ export const DraggableGrid = ({
     setActiveId(null);
   };
 
+  const handleAddRow = () => {
+    const newContainerId = getNextContainerId();
+
+    setItems({
+      ...items,
+      [newContainerId]: [],
+    });
+    setContainers((containers) => [...containers, newContainerId]);
+
+    console.log(items);
+  };
+
+  const getNextContainerId = () => {
+    const containerIds = Object.keys(items);
+    const lastContainerId = containerIds[containerIds.length - 1];
+
+    return String.fromCharCode(
+      lastContainerId.charCodeAt(0) + 1
+    ) as UniqueIdentifier;
+  };
+
   return (
     <div>
       <DndContext
@@ -305,6 +326,7 @@ export const DraggableGrid = ({
               </Draggable>
             ))}
           </ul>
+          <button onClick={handleAddRow}>Add row</button>
         </SortableContext>
       </DndContext>
     </div>
