@@ -21,11 +21,8 @@ import {
 } from "@dnd-kit/sortable";
 import { useCallback, useRef, useState } from "react";
 
-import { Draggable } from "components/Draggable";
-import { Droppable } from "components/Droppable";
+import { DraggableRow } from "./components/DraggableRow/DraggableRow";
 import { Grid } from "types/Grid";
-import { ProductCard } from "components/ProductCard";
-import { productsFixture } from "fixtures/Products";
 import styles from "./DraggableGrid.module.css";
 
 type GridProps = {
@@ -313,31 +310,12 @@ export const DraggableGrid = ({
         >
           <ul className={styles.grid}>
             {containers.map((containerId) => (
-              <div key={containerId}>
-                <button onClick={() => handleRemoveRow(containerId)}>X</button>
-                <Draggable draggableId={containerId.toString()}>
-                  <Droppable droppableId={containerId.toString()}>
-                    <SortableContext
-                      items={items[containerId]}
-                      strategy={horizontalListSortingStrategy}
-                      id={containerId.toString()}
-                    >
-                      <ul className={styles.row}>
-                        {items[containerId].map((productId) => (
-                          <ProductCard
-                            key={productId}
-                            product={
-                              productsFixture.find(
-                                (product) => product.id === productId
-                              ) ?? productsFixture[0]
-                            }
-                          />
-                        ))}
-                      </ul>
-                    </SortableContext>
-                  </Droppable>
-                </Draggable>
-              </div>
+              <DraggableRow
+                containerId={containerId}
+                rowItems={items[containerId]}
+                handleRemove={handleRemoveRow}
+                key={containerId}
+              />
             ))}
           </ul>
           <button onClick={handleAddRow}>Add row</button>
