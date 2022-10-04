@@ -282,6 +282,15 @@ export const DraggableGrid = ({
     ) as UniqueIdentifier;
   };
 
+  const handleRemoveRow = (containerId: UniqueIdentifier) => {
+    setContainers((containers) =>
+      containers.filter((id) => id !== containerId)
+    );
+    const newItems = items;
+    delete newItems[containerId];
+    setItems(newItems);
+  };
+
   return (
     <div>
       <DndContext
@@ -302,28 +311,31 @@ export const DraggableGrid = ({
         >
           <ul className={styles.grid}>
             {containers.map((containerId) => (
-              <Draggable draggableId={containerId.toString()} key={containerId}>
-                <Droppable droppableId={containerId.toString()}>
-                  <SortableContext
-                    items={items[containerId]}
-                    strategy={horizontalListSortingStrategy}
-                    id={containerId.toString()}
-                  >
-                    <ul className={styles.row}>
-                      {items[containerId].map((productId) => (
-                        <ProductCard
-                          key={productId}
-                          product={
-                            productsFixture.find(
-                              (product) => product.id === productId
-                            ) ?? productsFixture[0]
-                          }
-                        />
-                      ))}
-                    </ul>
-                  </SortableContext>
-                </Droppable>
-              </Draggable>
+              <div key={containerId}>
+                <button onClick={() => handleRemoveRow(containerId)}>X</button>
+                <Draggable draggableId={containerId.toString()}>
+                  <Droppable droppableId={containerId.toString()}>
+                    <SortableContext
+                      items={items[containerId]}
+                      strategy={horizontalListSortingStrategy}
+                      id={containerId.toString()}
+                    >
+                      <ul className={styles.row}>
+                        {items[containerId].map((productId) => (
+                          <ProductCard
+                            key={productId}
+                            product={
+                              productsFixture.find(
+                                (product) => product.id === productId
+                              ) ?? productsFixture[0]
+                            }
+                          />
+                        ))}
+                      </ul>
+                    </SortableContext>
+                  </Droppable>
+                </Draggable>
+              </div>
             ))}
           </ul>
           <button onClick={handleAddRow}>Add row</button>
