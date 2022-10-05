@@ -1,4 +1,5 @@
 .container {
+  margin: 0 16px;
   padding: 8px;
   display: flex;
   flex-flow: column nowrap;

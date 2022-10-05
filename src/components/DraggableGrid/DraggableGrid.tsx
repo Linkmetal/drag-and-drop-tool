@@ -13,6 +13,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { Grid, Row } from "types/Grid";
 import {
   SortableContext,
   arrayMove,
@@ -22,7 +23,6 @@ import {
 import { useCallback, useRef, useState } from "react";
 
 import { DraggableRow } from "./components/DraggableRow/DraggableRow";
-import { Grid } from "types/Grid";
 import styles from "./DraggableGrid.module.css";
 
 type GridProps = {
@@ -266,8 +266,6 @@ export const DraggableGrid = ({
       [newContainerId]: [],
     });
     setContainers((containers) => [...containers, newContainerId]);
-
-    console.log(items);
   };
 
   const getNextContainerId = () => {
@@ -291,7 +289,7 @@ export const DraggableGrid = ({
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <DndContext
         sensors={sensors}
         collisionDetection={collisionDetectionStrategy}
@@ -311,8 +309,11 @@ export const DraggableGrid = ({
           <ul className={styles.grid}>
             {containers.map((containerId) => (
               <DraggableRow
+                row={
+                  grid.rows.find((row) => row.id === containerId) || ({} as Row)
+                }
+                rowItemsIds={items[containerId]}
                 containerId={containerId}
-                rowItems={items[containerId]}
                 handleRemove={handleRemoveRow}
                 key={containerId}
               />

@@ -1,3 +1,7 @@
+.container {
+  width: 80%;
+}
+
 .grid {
   list-style: none;
 }
