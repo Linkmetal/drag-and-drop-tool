@@ -5,26 +5,24 @@ import {
 
 import { Draggable } from "components/Draggable/Draggable";
 import { Droppable } from "components/Droppable";
+import { Product } from "types/Product";
 import { ProductCard } from "components/ProductCard";
 import { Row } from "types/Grid";
 import { TemplateAlignmentToFlex } from "utils/grid";
 import { UniqueIdentifier } from "@dnd-kit/core";
-import { productsFixture } from "fixtures/Products";
 import styles from "./DraggableRow.module.css";
 import { useFetchTemplates } from "hooks/useFetchTemplates";
 import { useState } from "react";
 
 type DraggableRowProps = {
   row: Row;
-  containerId: UniqueIdentifier;
-  rowItemsIds: UniqueIdentifier[];
+  products: Product[];
   handleRemove: (containerId: UniqueIdentifier) => void;
 };
 
 export const DraggableRow = ({
   row,
-  containerId,
-  rowItemsIds,
+  products,
   handleRemove,
 }: DraggableRowProps) => {
   const { templates } = useFetchTemplates();
@@ -33,11 +31,11 @@ export const DraggableRow = ({
       ""
   );
 
-  if (!row || !rowItemsIds) return null;
+  if (!row) return null;
 
   return (
-    <div key={containerId}>
-      <button onClick={() => handleRemove(containerId)}>X</button>
+    <div key={row.id}>
+      <button onClick={() => handleRemove(row.id)}>X</button>
       <select onChange={(e) => setTemplateAlignment(e.target.value)}>
         <option value="">---</option>
         {templates?.map((template) => (
@@ -46,12 +44,12 @@ export const DraggableRow = ({
           </option>
         ))}
       </select>
-      <Draggable draggableId={containerId.toString()}>
-        <Droppable droppableId={containerId.toString()}>
+      <Draggable draggableId={row.id}>
+        <Droppable droppableId={row.id}>
           <SortableContext
-            items={rowItemsIds}
+            items={products.map((product) => product.id)}
             strategy={horizontalListSortingStrategy}
-            id={containerId.toString()}
+            id={row.id}
           >
             <ul
               className={styles.row}
@@ -62,16 +60,8 @@ export const DraggableRow = ({
                     : "space-evenly",
               }}
             >
-              {rowItemsIds.map((productId) => (
-                <ProductCard
-                  key={productId}
-                  // TODO: change this to take the product from parent
-                  product={
-                    productsFixture.find(
-                      (product) => product.id === productId
-                    ) ?? productsFixture[0]
-                  }
-                />
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
             </ul>
           </SortableContext>

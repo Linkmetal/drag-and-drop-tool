@@ -24,6 +24,8 @@ import { useCallback, useRef, useState } from "react";
 
 import { DraggableRow } from "./components/DraggableRow/DraggableRow";
 import { Product } from "types/Product";
+import { gridFixture } from "fixtures/Grid";
+import { nanoid } from "nanoid";
 import styles from "./DraggableGrid.module.css";
 
 type GridProps = {
@@ -31,24 +33,7 @@ type GridProps = {
   products: Product[];
 };
 
-export const DraggableGrid = ({
-  grid = {
-    id: "g1",
-    rows: [
-      {
-        id: "r1",
-        productIds: [
-          "63342dacc3764d72ac356d74",
-          "63342dac204a7b6b2e64a1d1",
-          "63342dac671db7974686b9f1",
-        ],
-        templateId: "",
-      },
-      { id: "r2", productIds: ["63342dac6f23396fbe4ab785"], templateId: "" },
-      { id: "r3", productIds: [], templateId: "" },
-    ],
-  },
-}: GridProps) => {
+export const DraggableGrid = ({ grid = gridFixture, products }: GridProps) => {
   const [items, setItems] = useState<{
     [key: UniqueIdentifier]: UniqueIdentifier[];
   }>(
@@ -261,22 +246,13 @@ export const DraggableGrid = ({
   };
 
   const handleAddRow = () => {
-    const newContainerId = getNextContainerId();
+    const newContainerId = nanoid(10);
 
     setItems({
       ...items,
       [newContainerId]: [],
     });
     setContainers((containers) => [...containers, newContainerId]);
-  };
-
-  const getNextContainerId = () => {
-    const containerIds = Object.keys(items);
-    const lastContainerId = containerIds[containerIds.length - 1];
-
-    return String.fromCharCode(
-      lastContainerId.charCodeAt(0) + 1
-    ) as UniqueIdentifier;
   };
 
   const handleRemoveRow = (containerId: UniqueIdentifier) => {
@@ -311,13 +287,19 @@ export const DraggableGrid = ({
           <ul className={styles.grid}>
             {containers.map((containerId) => (
               <DraggableRow
-                row={
-                  grid.rows.find((row) => row.id === containerId) || ({} as Row)
-                }
-                rowItemsIds={items[containerId]}
-                containerId={containerId}
-                handleRemove={handleRemoveRow}
                 key={containerId}
+                handleRemove={handleRemoveRow}
+                row={
+                  grid.rows.find((row) => row.id === containerId) ||
+                  ({
+                    id: containerId,
+                    productIds: items[containerId],
+                    templateId: "",
+                  } as Row)
+                }
+                products={products.filter((product) =>
+                  items[containerId].includes(product.id)
+                )}
               />
             ))}
           </ul>

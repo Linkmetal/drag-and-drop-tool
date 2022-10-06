@@ -15,7 +15,6 @@
 }
 
 .gridContainer {
-  overflow-y: auto;
   padding: 16px;
   height: 95vh;
   flex-grow: 1;

@@ -37,7 +37,7 @@ function App() {
           centerZoomedOut
         >
           <TransformComponent
-            wrapperStyle={{ width: "100%" }}
+            wrapperStyle={{ width: "100%", overflowY: "auto" }}
             contentStyle={{ width: "100%" }}
           >
             <div className={styles.gridContainer}>

@@ -8,9 +8,8 @@ describe("DraggableRow", () => {
     render(
       <DraggableRow
         row={{} as Row}
-        containerId="containerId"
         handleRemove={() => undefined}
-        rowItemsIds={[]}
+        products={[]}
       />
     );
 
