@@ -1,3 +1,4 @@
+// TODO: change this to work with padEnd
 export const numberToEuros = (number: number): string => {
   const splittedNumber = number.toString().split(".");
   if (splittedNumber.length === 1) {

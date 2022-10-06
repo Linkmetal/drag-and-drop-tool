@@ -23,15 +23,17 @@ import {
 import { useCallback, useRef, useState } from "react";
 
 import { DraggableRow } from "./components/DraggableRow/DraggableRow";
+import { Product } from "types/Product";
 import styles from "./DraggableGrid.module.css";
 
 type GridProps = {
   grid?: Grid;
+  products: Product[];
 };
 
 export const DraggableGrid = ({
   grid = {
-    id: "asd",
+    id: "g1",
     rows: [
       {
         id: "r1",
@@ -51,8 +53,8 @@ export const DraggableGrid = ({
     [key: UniqueIdentifier]: UniqueIdentifier[];
   }>(
     grid.rows.reduce(
-      (accumulator, value) => ({
-        ...accumulator,
+      (acc, value) => ({
+        ...acc,
         [value.id as UniqueIdentifier]: value.productIds as UniqueIdentifier[],
       }),
       {} as { [key: UniqueIdentifier]: UniqueIdentifier[] }

@@ -32,8 +32,6 @@ export const DraggableRow = ({
       ""
   );
 
-  console.log(row.productIds === rowItemsIds);
-
   if (!row || !rowItemsIds) return null;
 
   return (
@@ -54,7 +52,12 @@ export const DraggableRow = ({
             strategy={horizontalListSortingStrategy}
             id={containerId.toString()}
           >
-            <ul className={styles.row} style={{ justifyContent: template }}>
+            <ul
+              className={styles.row}
+              style={{
+                justifyContent: template !== "" ? template : "space-around",
+              }}
+            >
               {rowItemsIds.map((productId) => (
                 <ProductCard
                   key={productId}

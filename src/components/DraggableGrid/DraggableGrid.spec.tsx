@@ -4,7 +4,7 @@ import { DraggableGrid } from "./DraggableGrid";
 
 describe("DraggableGrid", () => {
   it("renders properly", () => {
-    render(<DraggableGrid />);
+    render(<DraggableGrid products={[]} />);
 
     expect(screen.getByText("A")).toBeInTheDocument();
   });

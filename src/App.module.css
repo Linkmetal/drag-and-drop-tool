@@ -1,3 +1,22 @@
+.root {
+  height: 100vh;
+}
+
 .container {
-  padding: 5% 10%;
+  display: flex;
+  flex-flow: row nowrap;
+  height: 95%;
+}
+
+.topbar {
+  width: 100vw;
+  height: 5%;
+  border: solid 1px black;
+}
+
+.gridContainer {
+  overflow-y: auto;
+  padding: 16px;
+  height: 95vh;
+  flex-grow: 1;
 }
