@@ -15,7 +15,7 @@ export const createGridFromProducts = (products: Product[]): Grid => {
     return [];
   });
 
-  const result = {
+  return {
     id: nanoid(10),
     rows: grouppedIds.map((ids) => ({
       id: nanoid(10),
@@ -23,9 +23,10 @@ export const createGridFromProducts = (products: Product[]): Grid => {
       templateId: "",
     })),
   };
-  console.log(
-    "🚀 ~ file: grid.ts ~ line 27 ~ createGridFromProducts ~ result",
-    result
-  );
-  return result;
 };
+
+export enum TemplateAlignmentToFlex {
+  CENTER = "center",
+  LEFT = "flex-start",
+  RIGHT = "flex-end",
+}

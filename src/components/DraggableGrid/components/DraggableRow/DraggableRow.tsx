@@ -7,6 +7,7 @@ import { Draggable } from "components/Draggable/Draggable";
 import { Droppable } from "components/Droppable";
 import { ProductCard } from "components/ProductCard";
 import { Row } from "types/Grid";
+import { TemplateAlignmentToFlex } from "utils/grid";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { productsFixture } from "fixtures/Products";
 import styles from "./DraggableRow.module.css";
@@ -27,7 +28,7 @@ export const DraggableRow = ({
   handleRemove,
 }: DraggableRowProps) => {
   const { templates } = useFetchTemplates();
-  const [template, setTemplate] = useState<string>(
+  const [templateAlignment, setTemplateAlignment] = useState<string>(
     templates?.find((template) => template.id === row.templateId)?.alignment ||
       ""
   );
@@ -37,7 +38,7 @@ export const DraggableRow = ({
   return (
     <div key={containerId}>
       <button onClick={() => handleRemove(containerId)}>X</button>
-      <select onChange={(e) => setTemplate(e.target.value)}>
+      <select onChange={(e) => setTemplateAlignment(e.target.value)}>
         <option value="">---</option>
         {templates?.map((template) => (
           <option key={template.id} value={template.alignment}>
@@ -55,7 +56,10 @@ export const DraggableRow = ({
             <ul
               className={styles.row}
               style={{
-                justifyContent: template !== "" ? template : "space-around",
+                justifyContent:
+                  templateAlignment !== ""
+                    ? TemplateAlignmentToFlex[templateAlignment]
+                    : "space-evenly",
               }}
             >
               {rowItemsIds.map((productId) => (
