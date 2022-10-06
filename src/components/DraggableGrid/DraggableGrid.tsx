@@ -13,6 +13,14 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Grid, Row } from "types/Grid";
 import {
   SortableContext,
@@ -20,7 +28,6 @@ import {
   horizontalListSortingStrategy,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
-import { useCallback, useRef, useState } from "react";
 
 import { DraggableRow } from "./components/DraggableRow/DraggableRow";
 import { Product } from "types/Product";
@@ -31,9 +38,14 @@ import styles from "./DraggableGrid.module.css";
 type GridProps = {
   grid?: Grid;
   products: Product[];
+  onGridChange: Dispatch<SetStateAction<Grid>>;
 };
 
-export const DraggableGrid = ({ grid = gridFixture, products }: GridProps) => {
+export const DraggableGrid = ({
+  grid = gridFixture,
+  products,
+  onGridChange,
+}: GridProps) => {
   const [items, setItems] = useState<{
     [key: UniqueIdentifier]: UniqueIdentifier[];
   }>(
@@ -266,6 +278,25 @@ export const DraggableGrid = ({ grid = gridFixture, products }: GridProps) => {
     setItems(newItems);
   };
 
+  const handleTemplateChange = (containerId: string, templateId: string) => {
+    const rows = grid.rows.map((row) => {
+      if (row.id === containerId) row.templateId = templateId;
+      return row;
+    });
+    onGridChange({ ...grid, rows });
+  };
+
+  useEffect(() => {
+    onGridChange({
+      id: grid.id,
+      rows: containers.map((containerId) => ({
+        id: containerId.toString(),
+        productIds: items[containerId] as string[],
+        templateId: "",
+      })),
+    });
+  }, [items, containers, grid.id, onGridChange]);
+
   return (
     <div className={styles.container}>
       <DndContext
@@ -288,7 +319,8 @@ export const DraggableGrid = ({ grid = gridFixture, products }: GridProps) => {
             {containers.map((containerId) => (
               <DraggableRow
                 key={containerId}
-                handleRemove={handleRemoveRow}
+                onRemoveRow={handleRemoveRow}
+                onTemplateChange={handleTemplateChange}
                 row={
                   grid.rows.find((row) => row.id === containerId) ||
                   ({

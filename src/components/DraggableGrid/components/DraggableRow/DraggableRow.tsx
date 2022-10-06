@@ -17,13 +17,15 @@ import { useState } from "react";
 type DraggableRowProps = {
   row: Row;
   products: Product[];
-  handleRemove: (containerId: UniqueIdentifier) => void;
+  onRemoveRow: (containerId: UniqueIdentifier) => void;
+  onTemplateChange: (containerId: string, templateId: string) => void;
 };
 
 export const DraggableRow = ({
   row,
   products,
-  handleRemove,
+  onRemoveRow,
+  onTemplateChange,
 }: DraggableRowProps) => {
   const { templates } = useFetchTemplates();
   const [templateAlignment, setTemplateAlignment] = useState<string>(
@@ -31,12 +33,22 @@ export const DraggableRow = ({
       ""
   );
 
+  const handleTemplateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const templateId =
+      templates?.find((template) => template.alignment === e.target.value)
+        ?.id || "";
+
+    setTemplateAlignment(e.target.value);
+    onTemplateChange(row.id, templateId);
+  };
+
   if (!row) return null;
 
   return (
     <div key={row.id}>
-      <button onClick={() => handleRemove(row.id)}>X</button>
-      <select onChange={(e) => setTemplateAlignment(e.target.value)}>
+      <button onClick={() => onRemoveRow(row.id)}>X</button>
+
+      <select onChange={handleTemplateChange}>
         <option value="">---</option>
         {templates?.map((template) => (
           <option key={template.id} value={template.alignment}>
@@ -44,6 +56,7 @@ export const DraggableRow = ({
           </option>
         ))}
       </select>
+
       <Draggable draggableId={row.id}>
         <Droppable droppableId={row.id}>
           <SortableContext

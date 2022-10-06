@@ -4,8 +4,8 @@ import { Grid } from "types/Grid";
 import { GridRepository } from "network/repositories/GridRepository";
 
 export namespace SaveGrid {
-  export type Response = string;
-  export type Variables = Omit<Grid, "id">;
+  export type Response = void;
+  export type Variables = Grid;
   export type Error = string;
   export type Options = UseMutationOptions<Response, Error, Variables>;
 }

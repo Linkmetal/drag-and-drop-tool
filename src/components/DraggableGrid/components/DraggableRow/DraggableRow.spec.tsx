@@ -8,7 +8,8 @@ describe("DraggableRow", () => {
     render(
       <DraggableRow
         row={{} as Row}
-        handleRemove={() => undefined}
+        onRemoveRow={() => undefined}
+        onTemplateChange={() => undefined}
         products={[]}
       />
     );

@@ -8,9 +8,13 @@
   height: 95%;
 }
 
-.topbar {
+.toolbarContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   width: 100vw;
   height: 5%;
+  padding: 0 2%;
   border: solid 1px black;
 }
 

@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
 
-import { DraggableGrid } from "./DraggableGrid";
+import { Toolbar } from "./Toolbar";
 
-describe("DraggableGrid", () => {
+describe("Toolbar", () => {
   it("renders properly", () => {
-    render(<DraggableGrid products={[]} onGridChange={jest.fn()} />);
+    render(<Toolbar onSave={() => undefined} onHelp={() => undefined} />);
 
     expect(screen.getByText("A")).toBeInTheDocument();
   });
