@@ -31,21 +31,19 @@ import {
 
 import { DraggableRow } from "./components/DraggableRow/DraggableRow";
 import { Product } from "types/Product";
-import { gridFixture } from "fixtures/Grid";
 import { nanoid } from "nanoid";
 import styles from "./DraggableGrid.module.css";
+import { useToastMessageContext } from "contexts/ToastContext";
 
 type GridProps = {
-  grid?: Grid;
+  grid: Grid;
   products: Product[];
-  onGridChange: Dispatch<SetStateAction<Grid>>;
+  onGridChange: Dispatch<SetStateAction<Grid | undefined>>;
 };
 
-export const DraggableGrid = ({
-  grid = gridFixture,
-  products,
-  onGridChange,
-}: GridProps) => {
+export const DraggableGrid = ({ grid, products, onGridChange }: GridProps) => {
+  const { setToastMessage } = useToastMessageContext();
+
   const [items, setItems] = useState<{
     [key: UniqueIdentifier]: UniqueIdentifier[];
   }>(
@@ -236,7 +234,14 @@ export const DraggableGrid = ({
     // Drag item to another row
     if (overContainer) {
       // Cancel the drag if there is more than 3 items in a row
-      if (items[overContainer].length >= 4) return onDragCancel();
+      if (items[overContainer].length >= 4) {
+        setToastMessage({
+          title: "Error while moving the element",
+          description: "You can't put more than 3 products inside a row",
+          variant: "error",
+        });
+        return onDragCancel();
+      }
 
       const activeIndex = items[activeContainer].indexOf(active.id);
 
@@ -268,7 +273,12 @@ export const DraggableGrid = ({
   };
 
   const handleRemoveRow = (containerId: UniqueIdentifier) => {
-    if (items[containerId].length > 0) return;
+    if (items[containerId].length > 0)
+      return setToastMessage({
+        title: "Error while deleting the row",
+        description: "You can't delete rows with products inside it",
+        variant: "error",
+      });
 
     setContainers((containers) =>
       containers.filter((id) => id !== containerId)
@@ -292,10 +302,13 @@ export const DraggableGrid = ({
       rows: containers.map((containerId) => ({
         id: containerId.toString(),
         productIds: items[containerId] as string[],
-        templateId: "",
+        templateId:
+          grid.rows.find((row) => row.id === containerId)?.templateId || "",
       })),
     });
-  }, [items, containers, grid.id, onGridChange]);
+    // NOTE: On this case, putting all the dependencies in the array will cause infinite updates
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
 
   return (
     <div className={styles.container}>
@@ -318,6 +331,7 @@ export const DraggableGrid = ({
           <ul className={styles.grid}>
             {containers.map((containerId) => (
               <DraggableRow
+                itemsIds={items[containerId]}
                 key={containerId}
                 onRemoveRow={handleRemoveRow}
                 onTemplateChange={handleTemplateChange}

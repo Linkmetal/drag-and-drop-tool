@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 
 import { MemoryRouter } from "react-router-dom";
+import { ToastMessageProvider } from "contexts/ToastContext";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,7 +29,9 @@ export const render = (
 ) => {
   const Wrapper = ({ children }: { children: ReactNode; route: string }) => (
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={[route || "/"]}>{children}</MemoryRouter>
+      <ToastMessageProvider>
+        <MemoryRouter initialEntries={[route || "/"]}>{children}</MemoryRouter>
+      </ToastMessageProvider>
     </QueryClientProvider>
   );
 

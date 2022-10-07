@@ -10,6 +10,7 @@ describe("DraggableRow", () => {
     render(
       <DraggableRow
         row={gridFixture.rows[0]}
+        itemsIds={gridFixture.rows[0].productIds}
         onRemoveRow={() => undefined}
         onTemplateChange={() => undefined}
         products={productsFixture.slice(0, 3)}
@@ -27,6 +28,7 @@ describe("DraggableRow", () => {
     render(
       <DraggableRow
         row={gridFixture.rows[0]}
+        itemsIds={gridFixture.rows[0].productIds}
         onRemoveRow={onRemoveRowMock}
         onTemplateChange={() => undefined}
         products={productsFixture.slice(0, 3)}
@@ -44,6 +46,7 @@ describe("DraggableRow", () => {
     render(
       <DraggableRow
         row={gridFixture.rows[0]}
+        itemsIds={gridFixture.rows[0].productIds}
         onRemoveRow={() => undefined}
         onTemplateChange={onTemplateChangeMock}
         products={productsFixture.slice(0, 3)}
