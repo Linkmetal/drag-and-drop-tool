@@ -1,5 +1,5 @@
 export type Template = {
   id: string;
   name: string;
-  alignment: "CENTER" | "LEFT" | "RIGHT";
+  alignment: "CENTER" | "LEFT" | "RIGHT" | "";
 };

@@ -5,7 +5,7 @@ import { ProductRepository } from "network/repositories/ProductRepository";
 
 export namespace FetchProducts {
   export type Params = {
-    prductsIds?: string[];
+    productIds?: string[];
   };
   export type Response = Product[];
   export type Error = string;

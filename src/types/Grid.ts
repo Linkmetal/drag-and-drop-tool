@@ -1,9 +1,10 @@
 export type Grid = {
   id: string;
-  row: Row[];
+  rows: Row[];
 };
 
 export type Row = {
+  id: string;
   productIds: string[];
   templateId: string;
 };
