@@ -8,7 +8,7 @@ describe("Toast", () => {
   it("displays the default message", () => {
     render(
       <ToastMessageProvider>
-        <Toast title="title" description="desciption" />
+        <Toast title="title" description="description" />
       </ToastMessageProvider>
     );
 
