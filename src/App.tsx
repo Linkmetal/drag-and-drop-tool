@@ -13,6 +13,7 @@ import { useFetchProducts } from "hooks/useFetchProducts";
 import { useLocation } from "react-router-dom";
 import { useSaveGrid } from "hooks/useSaveGrid";
 import { useState } from "react";
+import { useToastMessageContext } from "contexts/ToastContext";
 
 function App() {
   const { search } = useLocation();
@@ -24,18 +25,31 @@ function App() {
     onSuccess: (res) => setGrid(createGridFromProducts(res)),
   });
 
-  const [grid, setGrid] = useState<Grid>({} as Grid);
+  const [grid, setGrid] = useState<Grid | undefined>(undefined);
+
+  const { setToastMessage } = useToastMessageContext();
 
   if (!products) return null;
 
   const handleSave = () => {
-    const canSave = !grid.rows.find(
+    const canSave = !grid?.rows.find(
       (row) => row.templateId === "" || row.productIds.length === 0
     );
 
-    if (!canSave) return;
+    if (!canSave || !grid)
+      return setToastMessage({
+        title: "Error while saving the Grid",
+        description:
+          "You can't save a Grid with empty rows or without a template setted in every row",
+        variant: "error",
+      });
 
     saveGrid(grid);
+    setToastMessage({
+      title: "Success",
+      description: "Your grid has been succefully saved",
+      variant: "success",
+    });
   };
 
   return (
@@ -60,13 +74,15 @@ function App() {
             wrapperStyle={{ width: "100%", overflowY: "auto" }}
             contentStyle={{ width: "100%" }}
           >
-            <div className={styles.gridContainer}>
-              <DraggableGrid
-                grid={grid}
-                products={products}
-                onGridChange={setGrid}
-              />
-            </div>
+            {grid && (
+              <div className={styles.gridContainer}>
+                <DraggableGrid
+                  grid={grid}
+                  products={products}
+                  onGridChange={setGrid}
+                />
+              </div>
+            )}
           </TransformComponent>
         </TransformWrapper>
       </div>

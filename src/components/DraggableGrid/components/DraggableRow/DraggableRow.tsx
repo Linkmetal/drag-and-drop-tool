@@ -17,6 +17,7 @@ import { useState } from "react";
 type DraggableRowProps = {
   row: Row;
   products: Product[];
+  itemsIds: UniqueIdentifier[]; // NOTE: This prop is needed because the row change will cause the component to lose the productId while is still on the product, the id array handled by the library handles this
   onRemoveRow: (containerId: UniqueIdentifier) => void;
   onTemplateChange: (containerId: string, templateId: string) => void;
 };
@@ -26,6 +27,7 @@ export const DraggableRow = ({
   products,
   onRemoveRow,
   onTemplateChange,
+  itemsIds,
 }: DraggableRowProps) => {
   const { templates } = useFetchTemplates();
   const [templateAlignment, setTemplateAlignment] = useState<string>(
@@ -62,7 +64,7 @@ export const DraggableRow = ({
       <Draggable draggableId={row.id}>
         <Droppable droppableId={row.id}>
           <SortableContext
-            items={products.map((product) => product.id)}
+            items={itemsIds}
             strategy={horizontalListSortingStrategy}
             id={row.id}
           >
@@ -75,8 +77,14 @@ export const DraggableRow = ({
                     : "space-evenly",
               }}
             >
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+              {itemsIds.map((itemId) => (
+                <ProductCard
+                  key={itemId}
+                  product={
+                    products.find((product) => product.id === itemId) ||
+                    ({} as Product)
+                  }
+                />
               ))}
             </ul>
           </SortableContext>

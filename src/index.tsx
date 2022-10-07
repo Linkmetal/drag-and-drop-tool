@@ -2,10 +2,15 @@ import "./index.css";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  ToastMessageProvider,
+  useToastMessageContext,
+} from "contexts/ToastContext";
 
 import App from "./App";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Toast } from "components/Toast";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(
@@ -21,10 +26,24 @@ const router = createBrowserRouter([
   },
 ]);
 
+const ToastWrapper = ({ children }: { children: JSX.Element }) => {
+  const { toastMessage } = useToastMessageContext();
+  return (
+    <>
+      {toastMessage && <Toast {...toastMessage} />}
+      {children}
+    </>
+  );
+};
+
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <ToastMessageProvider>
+        <ToastWrapper>
+          <RouterProvider router={router} />
+        </ToastWrapper>
+      </ToastMessageProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );
