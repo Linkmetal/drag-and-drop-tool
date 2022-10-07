@@ -306,7 +306,9 @@ export const DraggableGrid = ({ grid, products, onGridChange }: GridProps) => {
           grid.rows.find((row) => row.id === containerId)?.templateId || "",
       })),
     });
-  }, [items, containers, grid.id, onGridChange]);
+    // NOTE: On this case, putting all the dependencies in the array will cause infinite updates
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
 
   return (
     <div className={styles.container}>
