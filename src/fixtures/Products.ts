@@ -67,7 +67,7 @@ export const productsFixture = [
   },
   {
     id: "759598",
-    name: "Elizabeth Blackburn",
+    name: "Elizabeth Black",
     price: 31.72,
     imageUrl: "https://cdn2.thecatapi.com/images/5hl.jpg",
   },

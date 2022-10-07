@@ -10,10 +10,6 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.11.62",
-    "@types/react": "^18.0.21",
-    "@types/react-dom": "^18.0.6",
     "nanoid": "^4.0.0",
     "query-string": "^7.1.1",
     "react": "^18.2.0",
@@ -48,5 +44,19 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "babel-jest": "^29.1.2",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.11.62",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!@nanoid)/"
+    ]
+  }
 }

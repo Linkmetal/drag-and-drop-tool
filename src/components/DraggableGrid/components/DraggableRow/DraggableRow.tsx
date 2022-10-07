@@ -46,9 +46,11 @@ export const DraggableRow = ({
 
   return (
     <div key={row.id}>
-      <button onClick={() => onRemoveRow(row.id)}>X</button>
+      <button aria-label="Delete row" onClick={() => onRemoveRow(row.id)}>
+        X
+      </button>
 
-      <select onChange={handleTemplateChange}>
+      <select aria-label="Select template" onChange={handleTemplateChange}>
         <option value="">---</option>
         {templates?.map((template) => (
           <option key={template.id} value={template.alignment}>
