@@ -21,6 +21,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:prod": "serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -49,7 +50,8 @@
     "@types/node": "^16.11.62",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
-    "babel-jest": "^29.1.2"
+    "babel-jest": "^29.1.2",
+    "serve": "^14.0.1"
   },
   "jest": {
     "transform": {
