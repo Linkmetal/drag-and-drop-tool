@@ -1,0 +1,57 @@
+.container {
+  height: 32px;
+  min-width: 32px;
+  display: flex;
+  flex-grow: 1;
+}
+
+.button {
+  height: 100%;
+  width: 100%;
+  font-size: 100%;
+  appearance: button;
+  border-radius: 6px;
+  border-width: 0;
+  box-shadow: rgba(50, 50, 93, 0.1) 0 0 0 1px inset,
+    rgba(50, 50, 93, 0.1) 0 2px 5px 0, rgba(0, 0, 0, 0.07) 0 1px 1px 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  height: 32px;
+  outline: none;
+  overflow: hidden;
+  text-align: center;
+  text-transform: none;
+  transition: all 0.2s, box-shadow 0.08s ease-in;
+  padding: 0 12px;
+}
+
+.button:disabled {
+  cursor: default;
+}
+
+.button:focus {
+  box-shadow: rgba(50, 50, 93, 0.1) 0 0 0 1px inset,
+    rgba(50, 50, 93, 0.2) 0 6px 15px 0, rgba(0, 0, 0, 0.1) 0 2px 2px 0,
+    rgba(50, 151, 211, 0.3) 0 0 0 4px;
+}
+
+.button:active {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.button > i {
+  padding: 10px 4px 0 0;
+}
+
+.onlyIcon {
+  padding: 0;
+}
+
+.onlyIcon > i {
+  padding: 10px 4px 0 4px;
+}
+
+.noShadow {
+  box-shadow: none;
+}

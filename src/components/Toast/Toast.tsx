@@ -1,3 +1,4 @@
+import { Button } from "components/Button";
 import styles from "./Toast.module.css";
 import { useToastMessageContext } from "contexts/ToastContext";
 
@@ -20,13 +21,17 @@ export const Toast = ({
 
   return (
     <div className={`${styles.container} ${styles[variant]}`}>
-      <button
-        className={styles.closeButton}
-        aria-label="Close toast notification"
-        onClick={onClose}
-      >
-        X
-      </button>
+      <div className={styles.closeButton}>
+        <Button
+          label="Close toast notification"
+          onlyIcon
+          onClick={onClose}
+          iconName="close"
+          color="transparent"
+          textColor="black"
+          noShadow
+        />
+      </div>
 
       <div className={styles.textContainer}>
         <div className={styles.title}>{title}</div>

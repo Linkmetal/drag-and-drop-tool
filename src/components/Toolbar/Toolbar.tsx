@@ -1,3 +1,4 @@
+import { Button } from "components/Button";
 import styles from "./Toolbar.module.css";
 
 type ToolbarProps = {
@@ -8,8 +9,8 @@ type ToolbarProps = {
 export const Toolbar = ({ onSave, onHelp }: ToolbarProps) => {
   return (
     <div className={styles.container}>
-      <button onClick={() => onSave()}>Save Grid</button>
-      <button onClick={() => onHelp()}>Help</button>
+      <Button onClick={() => onSave()} label="Save Grid" iconName="save" />
+      <Button onClick={() => onHelp()} label="Help" iconName="question" />
     </div>
   );
 };
