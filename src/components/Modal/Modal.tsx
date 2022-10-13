@@ -8,14 +8,13 @@ export type ModalProps = {
 };
 
 export const Modal = ({ open, onClose, children }: ModalProps) => {
+  if (!open) return null;
+
   return (
-    <div
-      className={`${styles.container}`}
-      style={{ display: open ? "inherit" : "none" }}
-    >
+    <div className={`${styles.container}`}>
       <div className={styles.closeButton}>
         <Button
-          label="Close toast notification"
+          label="Close modal"
           onlyIcon
           onClick={onClose}
           iconName="close"
