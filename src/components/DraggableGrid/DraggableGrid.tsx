@@ -29,6 +29,7 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 
+import { Button } from "components/Button";
 import { DraggableRow } from "./components/DraggableRow/DraggableRow";
 import { Product } from "types/Product";
 import { nanoid } from "nanoid";
@@ -308,7 +309,7 @@ export const DraggableGrid = ({ grid, products, onGridChange }: GridProps) => {
     });
     // NOTE: On this case, putting all the dependencies in the array will cause infinite updates
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items]);
+  }, [items, containers]);
 
   return (
     <div className={styles.container}>
@@ -349,7 +350,12 @@ export const DraggableGrid = ({ grid, products, onGridChange }: GridProps) => {
               />
             ))}
           </ul>
-          <button onClick={handleAddRow}>Add row</button>
+
+          <div className={styles.addRowContainer}>
+            <div className={styles.addRow}>
+              <Button label="Add row" onClick={handleAddRow} iconName="add" />
+            </div>
+          </div>
         </SortableContext>
       </DndContext>
     </div>

@@ -6,3 +6,13 @@
   list-style: none;
   padding: 0;
 }
+
+.addRowContainer {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 16px;
+}
+
+.addRow {
+  width: 50%;
+}

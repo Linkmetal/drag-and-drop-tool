@@ -5,6 +5,7 @@ import {
 
 import { DraggableGrid } from "components/DraggableGrid";
 import { Grid } from "types/Grid";
+import { Modal } from "components/Modal";
 import { Toolbar } from "components/Toolbar";
 import { createGridFromProducts } from "utils/grid";
 import { queryStringToObject } from "utils/query";
@@ -26,10 +27,9 @@ function App() {
   });
 
   const [grid, setGrid] = useState<Grid | undefined>(undefined);
+  const [isHelpModalVisible, setIsHelpModalVisible] = useState<boolean>(false);
 
   const { setToastMessage } = useToastMessageContext();
-
-  if (!products) return null;
 
   const handleSave = () => {
     const canSave = !grid?.rows.find(
@@ -52,10 +52,15 @@ function App() {
     });
   };
 
+  if (!products) return null;
+
   return (
     <div className={styles.root}>
       <div className={styles.toolbarContainer}>
-        <Toolbar onHelp={() => undefined} onSave={handleSave} />
+        <Toolbar
+          onHelp={() => setIsHelpModalVisible(true)}
+          onSave={handleSave}
+        />
       </div>
       <div className={styles.container}>
         <TransformWrapper
@@ -86,6 +91,28 @@ function App() {
           </TransformComponent>
         </TransformWrapper>
       </div>
+      <Modal
+        open={isHelpModalVisible}
+        onClose={() => setIsHelpModalVisible(false)}
+      >
+        <div>
+          <h1 style={{ marginTop: "0" }}>Help</h1>
+          <div>
+            <h3>Zoom</h3>
+            <p>
+              To zoom the grid hold either <b>Command</b> or <b>Control</b> key
+              and use the mousewheel or touchpad to change it.
+            </p>
+          </div>
+          <div>
+            <h3>Saving the grid</h3>
+            <p>
+              In order to save the grid, you will need to have all the rows with
+              at least 1 item and a template selected.
+            </p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

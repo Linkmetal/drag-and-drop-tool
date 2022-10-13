@@ -3,6 +3,7 @@ import {
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
+import { Button } from "components/Button";
 import { Draggable } from "components/Draggable/Draggable";
 import { Droppable } from "components/Droppable";
 import { Product } from "types/Product";
@@ -47,48 +48,62 @@ export const DraggableRow = ({
   if (!row) return null;
 
   return (
-    <div key={row.id}>
-      <button aria-label="Delete row" onClick={() => onRemoveRow(row.id)}>
-        X
-      </button>
-
-      <select aria-label="Select template" onChange={handleTemplateChange}>
-        <option value="">---</option>
-        {templates?.map((template) => (
-          <option key={template.id} value={template.alignment}>
-            {template.name}
-          </option>
-        ))}
-      </select>
-
+    <div className={styles.container} key={row.id}>
       <Draggable draggableId={row.id}>
-        <Droppable droppableId={row.id}>
-          <SortableContext
-            items={itemsIds}
-            strategy={horizontalListSortingStrategy}
-            id={row.id}
-          >
-            <ul
-              className={styles.row}
-              style={{
-                justifyContent:
-                  templateAlignment !== ""
-                    ? TemplateAlignmentToFlex[templateAlignment]
-                    : "space-evenly",
-              }}
+        <>
+          <div className={styles.actionBar}>
+            <div style={{ width: "32px" }}>
+              <Button
+                onlyIcon
+                color="#ed6366"
+                label="Delete row"
+                iconName="xmark"
+                onClick={() => onRemoveRow(row.id)}
+              />
+            </div>
+            <div className={styles.rowName}>{`${row.id}`}</div>
+
+            <select
+              className={styles.select}
+              aria-label="Select template"
+              onChange={handleTemplateChange}
             >
-              {itemsIds.map((itemId) => (
-                <ProductCard
-                  key={itemId}
-                  product={
-                    products.find((product) => product.id === itemId) ||
-                    ({} as Product)
-                  }
-                />
+              <option value="">Select template</option>
+              {templates?.map((template) => (
+                <option key={template.id} value={template.alignment}>
+                  {template.name}
+                </option>
               ))}
-            </ul>
-          </SortableContext>
-        </Droppable>
+            </select>
+          </div>
+          <Droppable droppableId={row.id}>
+            <SortableContext
+              items={itemsIds}
+              strategy={horizontalListSortingStrategy}
+              id={row.id}
+            >
+              <ul
+                className={styles.row}
+                style={{
+                  justifyContent:
+                    templateAlignment !== ""
+                      ? TemplateAlignmentToFlex[templateAlignment]
+                      : "space-evenly",
+                }}
+              >
+                {itemsIds.map((itemId) => (
+                  <ProductCard
+                    key={itemId}
+                    product={
+                      products.find((product) => product.id === itemId) ||
+                      ({} as Product)
+                    }
+                  />
+                ))}
+              </ul>
+            </SortableContext>
+          </Droppable>
+        </>
       </Draggable>
     </div>
   );
