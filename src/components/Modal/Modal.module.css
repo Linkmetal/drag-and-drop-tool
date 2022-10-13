@@ -13,18 +13,6 @@
     rgba(0, 0, 0, 0.22) 0px 15px 12px;
 }
 
-.textContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: space-evenly;
-}
-
-.title {
-  font-size: 150%;
-  margin-bottom: 16px;
-}
-
 .closeButton {
   all: unset;
   position: absolute;
@@ -34,8 +22,4 @@
   cursor: pointer;
   width: 24px;
   height: 24px;
-}
-
-.closeButton:hover {
-  color: white;
 }
