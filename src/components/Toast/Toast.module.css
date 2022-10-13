@@ -10,6 +10,26 @@
   border-radius: 12px;
 }
 
+.success {
+  background-color: #5edf6d;
+}
+
+.error {
+  background-color: #ed6366;
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: space-evenly;
+}
+
+.title {
+  font-size: 150%;
+  margin-bottom: 16px;
+}
+
 .closeButton {
   all: unset;
   position: absolute;
