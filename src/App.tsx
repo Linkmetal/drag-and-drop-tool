@@ -32,7 +32,7 @@ function App() {
   const { setToastMessage } = useToastMessageContext();
 
   const handleSave = () => {
-    const canSave = !grid?.rows.find(
+    const canSave = !grid?.rows.some(
       (row) => row.templateId === "" || row.productIds.length === 0
     );
 
