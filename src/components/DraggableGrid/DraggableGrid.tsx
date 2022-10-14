@@ -25,8 +25,8 @@ import { Grid, Row } from "types/Grid";
 import {
   SortableContext,
   arrayMove,
-  horizontalListSortingStrategy,
   sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
 import { Button } from "components/Button";
@@ -134,13 +134,8 @@ export const DraggableGrid = ({ grid, products, onGridChange }: GridProps) => {
   const onDragOver = ({ active, over }: DragOverEvent) => {
     const overId = over?.id;
 
-    if (active.id in items && over?.id) {
-      return setContainers((containers) => {
-        const activeIndex = containers.indexOf(active.id);
-        const overIndex = containers.indexOf(over.id);
-
-        return arrayMove(containers, activeIndex, overIndex);
-      });
+    if (overId == null || active.id in items) {
+      return;
     }
 
     if (!overId) return;
@@ -284,8 +279,13 @@ export const DraggableGrid = ({ grid, products, onGridChange }: GridProps) => {
     setContainers((containers) =>
       containers.filter((id) => id !== containerId)
     );
-    const newItems = items;
-    delete newItems[containerId];
+
+    const newItems = Object.entries(items)
+      .filter(([key]) => key !== containerId)
+      .reduce((acc, [key, value]) => {
+        return { ...acc, [key]: value };
+      }, {});
+
     setItems(newItems);
   };
 
@@ -326,7 +326,7 @@ export const DraggableGrid = ({ grid, products, onGridChange }: GridProps) => {
       >
         <SortableContext
           items={containers}
-          strategy={horizontalListSortingStrategy}
+          strategy={verticalListSortingStrategy}
           id={grid.id}
         >
           <ul className={styles.grid}>
