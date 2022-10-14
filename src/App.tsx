@@ -73,7 +73,6 @@ function App() {
           }}
           panning={{ disabled: true, excluded: ["select"] }}
           doubleClick={{ disabled: true }}
-          centerZoomedOut
         >
           <TransformComponent
             wrapperStyle={{ width: "100%", overflowY: "auto" }}
