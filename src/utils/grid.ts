@@ -1,5 +1,7 @@
-import { Grid } from "types/Grid";
+import { Grid, Row } from "types/Grid";
+
 import { Product } from "types/Product";
+import { UniqueIdentifier } from "@dnd-kit/core";
 import { nanoid } from "nanoid";
 
 export const createGridFromProducts = (products: Product[]): Grid => {
@@ -23,6 +25,16 @@ export const createGridFromProducts = (products: Product[]): Grid => {
       templateId: "",
     })),
   };
+};
+
+export const getItemsFromRows = (rows: Row[]) => {
+  return rows.reduce(
+    (acc, value) => ({
+      ...acc,
+      [value.id as UniqueIdentifier]: value.productIds as UniqueIdentifier[],
+    }),
+    {} as { [key: UniqueIdentifier]: UniqueIdentifier[] }
+  );
 };
 
 export enum TemplateAlignmentToFlex {

@@ -32,6 +32,7 @@ import {
 import { Button } from "components/Button";
 import { DraggableRow } from "./components/DraggableRow/DraggableRow";
 import { Product } from "types/Product";
+import { getItemsFromRows } from "utils/grid";
 import { nanoid } from "nanoid";
 import styles from "./DraggableGrid.module.css";
 import { useToastMessageContext } from "contexts/ToastContext";
@@ -47,15 +48,7 @@ export const DraggableGrid = ({ grid, products, onGridChange }: GridProps) => {
 
   const [items, setItems] = useState<{
     [key: UniqueIdentifier]: UniqueIdentifier[];
-  }>(
-    grid.rows.reduce(
-      (acc, value) => ({
-        ...acc,
-        [value.id as UniqueIdentifier]: value.productIds as UniqueIdentifier[],
-      }),
-      {} as { [key: UniqueIdentifier]: UniqueIdentifier[] }
-    )
-  );
+  }>(() => getItemsFromRows(grid.rows));
 
   const [clonedItems, setClonedItems] = useState<{
     [key: UniqueIdentifier]: UniqueIdentifier[];
@@ -141,9 +134,16 @@ export const DraggableGrid = ({ grid, products, onGridChange }: GridProps) => {
   const onDragOver = ({ active, over }: DragOverEvent) => {
     const overId = over?.id;
 
-    if (overId == null || active.id in items) {
-      return;
+    if (active.id in items && over?.id) {
+      return setContainers((containers) => {
+        const activeIndex = containers.indexOf(active.id);
+        const overIndex = containers.indexOf(over.id);
+
+        return arrayMove(containers, activeIndex, overIndex);
+      });
     }
+
+    if (!overId) return;
 
     const overContainer = findContainer(overId);
     const activeContainer = findContainer(active.id);
